@@ -34,3 +34,14 @@ export async function generateChatCompletion(userMessage) {
     throw error;
   }
 }
+
+// ✅ Add this function back so ApiConfigurationSection.jsx doesn't break
+export async function testOpenAIConnection() {
+  try {
+    const response = await client.models.list(); // simple check: list models
+    return response.data.length > 0; // return true if API works
+  } catch (error) {
+    console.error("API connection test failed:", error);
+    return false;
+  }
+}
