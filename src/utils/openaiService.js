@@ -35,13 +35,38 @@ export async function generateChatCompletion(userMessage) {
   }
 }
 
-// ✅ Add this function back so ApiConfigurationSection.jsx doesn't break
+// ✅ Add back for ApiConfigurationSection.jsx
 export async function testOpenAIConnection() {
   try {
-    const response = await client.models.list(); // simple check: list models
-    return response.data.length > 0; // return true if API works
+    const response = await client.models.list();
+    return response.data.length > 0;
   } catch (error) {
     console.error("API connection test failed:", error);
     return false;
+  }
+}
+
+// ✅ Add for index.jsx
+export async function generatePresentationStructure(topic) {
+  try {
+    const response = await client.chat.completions.create({
+      model: "openai/gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert presentation creator. Generate a slide structure.",
+        },
+        {
+          role: "user",
+          content: `Generate a structured presentation outline for the topic: ${topic}.
+                    Return JSON with 'title' and 'slides' (each slide should have 'heading' and 'points').`,
+        },
+      ],
+    });
+
+    return response.choices[0].message.content;
+  } catch (error) {
+    console.error("Error generating presentation structure:", error);
+    throw error;
   }
 }
